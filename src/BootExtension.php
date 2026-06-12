@@ -2,7 +2,7 @@
 
 namespace Encore\Admin\RedisManager;
 
-use Encore\Admin\Facades\Admin;
+use Ladmin\Facades\Admin;
 
 trait BootExtension
 {

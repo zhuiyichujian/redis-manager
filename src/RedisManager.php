@@ -2,7 +2,7 @@
 
 namespace Encore\Admin\RedisManager;
 
-use Ladmin\Admin;
+use Ladmin\Extension;
 use Ladmin\RedisManager\DataType\DataType;
 use Ladmin\RedisManager\DataType\Hashes;
 use Ladmin\RedisManager\DataType\Lists;
