@@ -2,8 +2,8 @@
 
 namespace Encore\Admin\RedisManager;
 
-use Encore\Admin\Facades\Admin;
-use Encore\Admin\Layout\Content;
+use Ladmin\Facades\Admin;
+use Ladmin\Layout\Content;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Str;
