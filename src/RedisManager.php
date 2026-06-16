@@ -174,8 +174,9 @@ class RedisManager extends Extension
         $keys = [];
 
         foreach (new Keyspace($client->client(), $pattern) as $item) {
-            $keys[] = $item;
-
+            if (str_starts_with($item, $client->getOptions()->prefix)) {
+                $keys[] = str_replace($client->getOptions()->prefix, '', $item);
+            }
             if (count($keys) == $count) {
                 break;
             }
@@ -204,11 +205,12 @@ LUA;
      */
     public function fetch($key)
     {
+        $key = str_replace($this->getConnection()->getOptions()->prefix, '', $key);
         if (!$this->getConnection()->exists($key)) {
             return [];
         }
 
-        $type = $this->getConnection()->type($key)->__toString();
+        $type = $this->getConnection()->type($key);
 
         /** @var DataType $class */
         $class = $this->{$type}();
@@ -230,13 +232,16 @@ LUA;
     {
         $key = $request->get('key');
         $type = $request->get('type');
-
+        $key = str_replace($this->getConnection()->getOptions()->prefix, '', $key);
         /** @var DataType $class */
         $class = $this->{$type}();
 
         $class->update($request->all());
 
         $class->setTtl($key, $request->get('ttl'));
+        if ('string' == $type) {
+            return redirect(admin_url('redis'));
+        }
     }
 
     /**
@@ -248,9 +253,13 @@ LUA;
      */
     public function del($key)
     {
+        
         if (is_string($key)) {
             $key = [$key];
         }
+        $key = array_map(function ($key) {
+            return str_replace($this->getConnection()->getOptions()->prefix, '', $key);
+        }, $key);
 
         return $this->getConnection()->del($key);
     }

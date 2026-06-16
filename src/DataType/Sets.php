@@ -1,7 +1,7 @@
 <?php
 
 namespace Encore\Admin\RedisManager\DataType;
-
+use Illuminate\Support\Arr;
 class Sets extends DataType
 {
     /**
@@ -17,16 +17,16 @@ class Sets extends DataType
      */
     public function update(array $params)
     {
-        $key = array_get($params, 'key');
+        $key = Arr::get($params, 'key');
 
-        if (array_has($params, 'member')) {
-            $member = array_get($params, 'member');
+        if (Arr::has($params, 'member')) {
+            $member = Arr::get($params, 'member');
             $this->getConnection()->sadd($key, $member);
         }
 
-        if (array_has($params, '_editable')) {
-            $new = array_get($params, 'value');
-            $old = array_get($params, 'pk');
+        if (Arr::has($params, '_editable')) {
+            $new = Arr::get($params, 'value');
+            $old = Arr::get($params, 'pk');
 
             $this->getConnection()->transaction(function ($tx) use ($key, $old, $new) {
                 $tx->srem($key, $old);
@@ -40,9 +40,9 @@ class Sets extends DataType
      */
     public function store(array $params)
     {
-        $key = array_get($params, 'key');
-        $ttl = array_get($params, 'ttl');
-        $members = array_get($params, 'members');
+        $key = Arr::get($params, 'key');
+        $ttl = Arr::get($params, 'ttl');
+        $members = Arr::get($params, 'members');
 
         $this->getConnection()->sadd($key, $members);
 
@@ -65,8 +65,8 @@ class Sets extends DataType
      */
     public function remove(array $params)
     {
-        $key = array_get($params, 'key');
-        $member = array_get($params, 'member');
+        $key = Arr::get($params, 'key');
+        $member = Arr::get($params, 'member');
 
         return $this->getConnection()->srem($key, $member);
     }
